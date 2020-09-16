@@ -6,3 +6,10 @@ input = title, author, pg, read or not
 output = obj
 write obj constructor
 */
+
+function Book(title,author,pgCount) {
+    this.title = title,
+    this.author = author,
+    this.pgCount = pgCount
+    this.printInfo = () => title + " by " + author + ", " + pgCount + "pgs"
+}
