@@ -104,7 +104,11 @@ let karamazov = new Book("The Brothers Karamazov","Fyodor Dostoevsky","840","Rea
 let warAndPeace = new Book("War And Peace", "Leo Tolstoy", "1225", "Reading");
 */
 
-const bookShelfArr = [];
+let karamazov = new Book("The Brothers Karamazov", "Fyodor Dostoevsky", "840", "Read");
+let warAndPeace = new Book("War And Peace", "Leo Tolstoy", "1225", "Reading");
+
+const bookShelfArr = [karamazov, warAndPeace];
+const content = document.getElementById("content")
 
 function Book(title, author, pgCount, status) {
     this.title = title,
@@ -146,6 +150,7 @@ const formProceses = (() => {
         const pages = bookPages.value;
         const status = findChecked(statusRadios);
         bookShelfArr.push(new Book(title, author, pages, status));
+        cardProcesses.renderShelf(bookShelfArr);
     });
 })();
 
@@ -159,29 +164,49 @@ const cardProcesses = (() => {
         let li = makeLi();
         let h1 = makeH1();
         h1.textContent = obj.printInfo();
+
         let btn = makeBtn();
         btn.textContent = obj.status;
         btn.addEventListener("click", () => {
             obj.toggleStatus();
         });
+
         let div = makeDiv();
-        div.classList.add("statusColor")
+        div.classList.add("statusColor");
         div.style.backgroundColor = determineColor(obj.status)
         li.appendChild(h1);
         li.appendChild(btn);
         li.appendChild(div);
         return li;
-    }
+    };
 
     const determineColor = (status) => {
-        switch(status) {
+        switch (status) {
             case "Read":
                 return "green";
             case "Reading":
                 return "blue";
             case "Unread":
                 return "red";
+        };
+    };
+
+    const initShelf = (shelfArr) => {
+        if (!!content.childElementCount) {
+            for (let i = 0; i < shelfArr.length; i++) {
+                content.removeChild(content.lastElementChild);
+            };
         }
-    }
-    return {makeCard}
+    };
+
+    const renderShelf = (shelfArr) => {
+        initShelf(shelfArr);
+        for (let i = 0; i < shelfArr.length; i++) {
+            content.appendChild(makeCard(shelfArr[i]));
+        };
+    };
+
+    return { renderShelf }
 })();
+
+cardProcesses.renderShelf(bookShelfArr);
