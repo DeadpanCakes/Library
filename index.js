@@ -40,10 +40,17 @@ write a fn that associates read statuses with particular colors
         case "Unread":
             return "red";
     }
-    
+
 write a form to accept all relevant information
 
 write a fn to attach to a button that displays and hides the form
+const = toggleForm => (element) {
+    if (!!element.classList[0]) {
+        element.classList.remove("animateShow");
+    } else {
+        element.classList.add("animateShow");
+    }
+}
 
 animate the displaying and hiding of the form
 */
