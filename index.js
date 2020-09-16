@@ -169,6 +169,7 @@ const cardProcesses = (() => {
         btn.textContent = obj.status;
         btn.addEventListener("click", () => {
             obj.toggleStatus();
+            renderShelf(bookShelfArr);
         });
 
         let div = makeDiv();
@@ -191,22 +192,22 @@ const cardProcesses = (() => {
         };
     };
 
-    const initShelf = (shelfArr) => {
+    const initShelf = () => {
         if (!!content.childElementCount) {
-            for (let i = 0; i < shelfArr.length; i++) {
+            for (let i = 0, length=content.childNodes.length; i < length; i++) {
                 content.removeChild(content.lastElementChild);
             };
         }
     };
 
     const renderShelf = (shelfArr) => {
-        initShelf(shelfArr);
+        initShelf();
         for (let i = 0; i < shelfArr.length; i++) {
             content.appendChild(makeCard(shelfArr[i]));
         };
     };
 
-    return { renderShelf }
+    return { initShelf, renderShelf }
 })();
 
 cardProcesses.renderShelf(bookShelfArr);
