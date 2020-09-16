@@ -15,43 +15,6 @@ Output? The form inputs will submit the form, instantiating a new object which w
 an array. After this, the array will be looped through, generating div elements displaying all the relevant information by accessing each object and their
 properties. These divs will then be appended on to the page in order.
 
-write constructor function to accept relevant input
-
-write fn to push generated obj to an arr
-bookShelf.push(new Book(formTitle, formAuthor, formPgCount))
-
-write a fn to generate a 'card' based on an book object's values
-    What will a card look like?
-        List (unsure whether or not to order) id = "bookshelf"
-            list item
-                h1>obj.printInfo()
-                obj.status
-                btn>Toggle Read
-                div>Background color (dependant on obj.status)
-    In Javascript?
-        const makeLi = () => document.createElement("li");
-        const makeH1 = () => document.createElement("h1");
-        const makeBtn = () => document.createElement("button");
-        const makeDiv = () => document.createElement("div");
-        const makeCard = obj => {
-            let li = makeLi();
-            let h1 = makeH1();
-            h1.textContent = obj.printInfo();
-            let btn = makeBtn();
-            btn.textContent = obj.status;
-            btn.addEventListener("click", e => {
-                obj.toggleStatus();
-                console.log(obj.status);
-                console.log(obj.title);
-            });
-            let div = makeDiv();
-            div.style.backgroundColor = determineColor(obj.status)
-            li.appendChild(h1);
-            li.appendChild(btn);
-            li.appendChild(div);
-            return li;
-        } 
-
 write a fn to discern which card a button press corresponds to
 const checkCard = (event) =>  {
     let card = event.parentElement.parentElement
@@ -59,20 +22,6 @@ const checkCard = (event) =>  {
     bookshelfArr[index].toggleStatus();
 }
 
-write a fn that changes the corrpesponding card's read status
-const = (obj) => obj.toggleStatus
-
-write a fn that associates read statuses with particular colors
-const determineColor = (status) => {
-    switch(status) {
-        case "Read":
-            return "green";
-        case "Reading":
-            return "blue";
-        case "Unread":
-            return "red";
-    }
-}
 
 write a fn to attach to a button that displays and hides the form
 const = toggleForm => (element) {
@@ -83,20 +32,6 @@ const = toggleForm => (element) {
     }
 }
 
-write a fn to initialize #bookshelf
-const init = () => {
-    let x = bookshelf.childNodes.length
-    for (let i=0;i<x;i++) {
-        bookshelf.removeChild(bookshelf.lastElementChild)
-    }
-}
-
-write a fn to populate bookshelf with cards
-const populateShelf = (shelf) => {
-    for (let i = 0;i<shelf.length,i++) {
-        document.getElementById("bookshelf").appendChild(makeCard(shelf[i]);
-    }
-}
 animate the displaying and hiding of the form
 
 test obj:
@@ -104,10 +39,11 @@ let karamazov = new Book("The Brothers Karamazov","Fyodor Dostoevsky","840","Rea
 let warAndPeace = new Book("War And Peace", "Leo Tolstoy", "1225", "Reading");
 */
 
-let karamazov = new Book("The Brothers Karamazov", "Fyodor Dostoevsky", "840", "Read");
-let warAndPeace = new Book("War And Peace", "Leo Tolstoy", "1225", "Reading");
+const karamazov = new Book("The Brothers Karamazov", "Fyodor Dostoevsky", 840, "Read");
+const warAndPeace = new Book("War And Peace", "Leo Tolstoy", 1225, "Reading");
+const metamorphosis = new Book("The Metamorphosis", "Franz Kafka", 58, "Read");
 
-const bookShelfArr = [karamazov, warAndPeace];
+let bookShelfArr = [karamazov, warAndPeace,metamorphosis];
 const content = document.getElementById("content")
 
 function Book(title, author, pgCount, status) {
@@ -162,12 +98,20 @@ const cardProcesses = (() => {
 
     const makeCard = obj => {
         let li = makeLi();
+
+        let delBtn = makeBtn();
+        delBtn.textContent = "X"
+        delBtn.addEventListener("click", e => {
+                bookShelfArr = delCard(checkCard(e));
+                renderShelf(bookShelfArr);
+        });
+
         let h1 = makeH1();
         h1.textContent = obj.printInfo();
 
-        let btn = makeBtn();
-        btn.textContent = obj.status;
-        btn.addEventListener("click", () => {
+        let toggleBtn = makeBtn();
+        toggleBtn.textContent = obj.status;
+        toggleBtn.addEventListener("click", () => {
             obj.toggleStatus();
             renderShelf(bookShelfArr);
         });
@@ -175,11 +119,24 @@ const cardProcesses = (() => {
         let div = makeDiv();
         div.classList.add("statusColor");
         div.style.backgroundColor = determineColor(obj.status)
+        li.appendChild(delBtn);
         li.appendChild(h1);
-        li.appendChild(btn);
+        li.appendChild(toggleBtn);
         li.appendChild(div);
         return li;
     };
+
+    const checkCard = (e) => {
+        const card = e.target.parentElement;
+        const arr = Array.from(content.childNodes);
+        return arr.indexOf(card);
+    };
+
+    const delCard = (index) => {
+        const booksBefore = bookShelfArr.slice(0,index);
+        const booksAfter = bookShelfArr.slice(index+1);
+        return booksBefore.concat(booksAfter);
+    }
 
     const determineColor = (status) => {
         switch (status) {
