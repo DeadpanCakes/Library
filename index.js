@@ -42,6 +42,17 @@ write a fn that associates read statuses with particular colors
     }
 
 write a form to accept all relevant information
+form
+    label for = "title"> Title
+    input id = "title" type = text
+    label for = "author"> Author
+    input id = "author" type = text
+    label for = "pages"> Pages
+    input id = "pages" type = numeber min = 1 max = 9,999
+    input id = "read" type = radio
+    label for = "read"> Read
+    input id = "unread" type = radio
+    label for = "unread"> Unread
 
 write a fn to attach to a button that displays and hides the form
 const = toggleForm => (element) {
