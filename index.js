@@ -18,8 +18,10 @@ properties. These divs will then be appended on to the page in order.
 write constructor function to accept relevant input
 
 write fn to push generated obj to an arr
+bookShelf.push(new Book(formTitle, formAuthor, formPgCount))
 
 write a fn to generate a 'card' based on an book object's values
+    What will a card look like?
 
 write a fn that changes the corrpesponding card's read status
 
@@ -31,6 +33,8 @@ write a fn to attach to a button that displays and hides the form
 
 animate the displaying and hiding of the form
 */
+
+const bookShelf = [];
 
 function Book(title,author,pgCount) {
     this.title = title,
