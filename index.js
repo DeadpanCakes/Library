@@ -105,7 +105,11 @@ const init = () => {
 }
 
 write a fn to populate bookshelf with cards
-
+const populateShelf = (shelf) => {
+    for (let i = 0;i<shelf.length,i++) {
+        document.getElementById("bookshelf").appendChild(makeCard(shelf[i]);
+    }
+}
 animate the displaying and hiding of the form
 
 test obj:
