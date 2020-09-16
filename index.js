@@ -74,19 +74,6 @@ const determineColor = (status) => {
     }
 }
 
-write a form to accept all relevant information
-form
-    label for = "title"> Title
-    input id = "title" type = text
-    label for = "author"> Author
-    input id = "author" type = text
-    label for = "pages"> Pages
-    input id = "pages" type = numeber min = 1 max = 9,999
-    input id = "read" type = radio
-    label for = "read"> Read
-    input id = "unread" type = radio
-    label for = "unread"> Unread
-
 write a fn to attach to a button that displays and hides the form
 const = toggleForm => (element) {
     if (!!element.classList[0]) {
@@ -119,19 +106,45 @@ let warAndPeace = new Book("War And Peace", "Tolstoy", "like 1000", "reading");
 
 const bookShelfArr = [];
 
-function Book(title,author,pgCount,status) {
+function Book(title, author, pgCount, status) {
     this.title = title,
-    this.author = author,
-    this.pgCount = pgCount,
-    this.printInfo = () => title + " by " + author + ", " + pgCount + "pgs",
-    this.status = status,
-    this.toggleStatus = () => {
-        if (this.status === "Unread") {
-            this.status = "Reading"
-        } else if (this.status === "Reading") {
-            this.status = "Read";
-        } else {
-            this.status = "Unread";
+        this.author = author,
+        this.pgCount = pgCount,
+        this.printInfo = () => title + " by " + author + ", " + pgCount + "pgs",
+        this.status = status,
+        this.toggleStatus = () => {
+            if (this.status === "Unread") {
+                this.status = "Reading"
+            } else if (this.status === "Reading") {
+                this.status = "Read";
+            } else {
+                this.status = "Unread";
+            }
         }
-    }
 }
+
+const formProceses = (() => {
+    const submitBtn = document.getElementById("submitBtn");
+    const bookTitle = document.getElementById("bookTitle");
+    const bookAuthor = document.getElementById("bookAuthor");
+    const bookPages = document.getElementById("bookPages");
+    const statusRadios = document.querySelectorAll(".statusRadio");
+    const findChecked = radios => {
+        let checked
+        for (let i = 0; i < radios.length; i++) {
+            if (radios[i].checked) {
+                checked = radios[i].labels[0].textContent;
+            }
+        }
+        return checked;
+    }
+
+    submitBtn.addEventListener("click", e => {
+        e.preventDefault();
+        const title = bookTitle.value;
+        const author = bookAuthor.value;
+        const pages = bookPages.value;
+        const status = findChecked(statusRadios);
+        bookShelfArr.push(new Book(title, author, pages, status));
+    });
+})();
