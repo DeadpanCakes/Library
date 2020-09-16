@@ -22,7 +22,13 @@ bookShelf.push(new Book(formTitle, formAuthor, formPgCount))
 
 write a fn to generate a 'card' based on an book object's values
     What will a card look like?
-
+        List (unsure whether or not to order)
+            list item
+                div
+                    h1>obj.printInfo()
+                    obj.status
+                    btn>Toggle Read
+                    div>Background color (dependant on obj.status)
 write a fn that changes the corrpesponding card's read status
 
 write a fn that associates read statuses with particular colors
