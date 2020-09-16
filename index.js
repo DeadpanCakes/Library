@@ -32,7 +32,15 @@ write a fn to generate a 'card' based on an book object's values
 write a fn that changes the corrpesponding card's read status
 
 write a fn that associates read statuses with particular colors
-
+    switch(status) {
+        case "Read":
+            return "green";
+        case "Reading":
+            return "blue";
+        case "Unread":
+            return "red";
+    }
+    
 write a form to accept all relevant information
 
 write a fn to attach to a button that displays and hides the form
