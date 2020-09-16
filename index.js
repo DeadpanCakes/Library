@@ -100,8 +100,8 @@ const populateShelf = (shelf) => {
 animate the displaying and hiding of the form
 
 test obj:
-let karamazov = new Book("The Brothers Karamazov","Dostoevsky","like 800","read");
-let warAndPeace = new Book("War And Peace", "Tolstoy", "like 1000", "reading");
+let karamazov = new Book("The Brothers Karamazov","Fyodor Dostoevsky","840","Read");
+let warAndPeace = new Book("War And Peace", "Leo Tolstoy", "1225", "Reading");
 */
 
 const bookShelfArr = [];
@@ -147,4 +147,41 @@ const formProceses = (() => {
         const status = findChecked(statusRadios);
         bookShelfArr.push(new Book(title, author, pages, status));
     });
+})();
+
+const cardProcesses = (() => {
+    const makeLi = () => document.createElement("li");
+    const makeH1 = () => document.createElement("h1");
+    const makeBtn = () => document.createElement("button");
+    const makeDiv = () => document.createElement("div");
+
+    const makeCard = obj => {
+        let li = makeLi();
+        let h1 = makeH1();
+        h1.textContent = obj.printInfo();
+        let btn = makeBtn();
+        btn.textContent = obj.status;
+        btn.addEventListener("click", () => {
+            obj.toggleStatus();
+        });
+        let div = makeDiv();
+        div.classList.add("statusColor")
+        div.style.backgroundColor = determineColor(obj.status)
+        li.appendChild(h1);
+        li.appendChild(btn);
+        li.appendChild(div);
+        return li;
+    }
+
+    const determineColor = (status) => {
+        switch(status) {
+            case "Read":
+                return "green";
+            case "Reading":
+                return "blue";
+            case "Unread":
+                return "red";
+        }
+    }
+    return {makeCard}
 })();
