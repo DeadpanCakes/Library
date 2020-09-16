@@ -36,9 +36,10 @@ animate the displaying and hiding of the form
 
 const bookShelf = [];
 
-function Book(title,author,pgCount) {
+function Book(title,author,pgCount,status) {
     this.title = title,
     this.author = author,
     this.pgCount = pgCount
-    this.printInfo = () => title + " by " + author + ", " + pgCount + "pgs"
+    this.printInfo = () => title + " by " + author + ", " + pgCount + "pgs",
+    this.status = status
 }
