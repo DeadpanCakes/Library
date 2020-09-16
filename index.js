@@ -29,7 +29,9 @@ write a fn to generate a 'card' based on an book object's values
                     obj.status
                     btn>Toggle Read
                     div>Background color (dependant on obj.status)
+
 write a fn that changes the corrpesponding card's read status
+const = (obj) => obj.toggleStatus
 
 write a fn that associates read statuses with particular colors
     switch(status) {
@@ -74,4 +76,13 @@ function Book(title,author,pgCount,status) {
     this.pgCount = pgCount
     this.printInfo = () => title + " by " + author + ", " + pgCount + "pgs",
     this.status = status
+    this.toggleStatus = () => {
+        if (this.status === "Unread") {
+            this.status = "Reading"
+        } else if (this.status === "Reading") {
+            this.status = "Read";
+        } else {
+            this.status = "Unread";
+        }
+    }
 }
