@@ -22,13 +22,19 @@ bookShelf.push(new Book(formTitle, formAuthor, formPgCount))
 
 write a fn to generate a 'card' based on an book object's values
     What will a card look like?
-        List (unsure whether or not to order)
+        List (unsure whether or not to order) id = "bookshelf"
             list item
-                div
-                    h1>obj.printInfo()
-                    obj.status
-                    btn>Toggle Read
-                    div>Background color (dependant on obj.status)
+                h1>obj.printInfo()
+                obj.status
+                btn>Toggle Read
+                div>Background color (dependant on obj.status)
+
+write a fn to discern which card a button press corresponds to
+const checkCard = (event) =>  {
+    let card = event.parentElement.parentElement
+    index = bookShelf.childNodes.indexOf(card)
+    bookshelfArr[index].toggleStatus();
+}
 
 write a fn that changes the corrpesponding card's read status
 const = (obj) => obj.toggleStatus
@@ -65,17 +71,27 @@ const = toggleForm => (element) {
     }
 }
 
+write a fn to initialize #bookshelf
+const init = () => {
+    let x = bookshelf.childNodes.length
+    for (let i=0;i<x;i++) {
+        bookshelf.removeChild(bookshelf.lastElementChild)
+    }
+}
+
+write a fn to populate bookshelf with cards
+
 animate the displaying and hiding of the form
 */
 
-const bookShelf = [];
+const bookShelfArr = [];
 
 function Book(title,author,pgCount,status) {
     this.title = title,
     this.author = author,
-    this.pgCount = pgCount
+    this.pgCount = pgCount,
     this.printInfo = () => title + " by " + author + ", " + pgCount + "pgs",
-    this.status = status
+    this.status = status,
     this.toggleStatus = () => {
         if (this.status === "Unread") {
             this.status = "Reading"
