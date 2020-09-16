@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <head>
     <link rel="stylesheet" href="style.css">
     <title>Library</title>
@@ -6,19 +7,23 @@
 </head>
 
 <body>
-    <form action="" id ="bookForm">
-        <label for="bookTitle">Title</label>
-        <input type="text" id="bookTitle">
-        <label for="bookAuthor">Author</label>
-        <input type="text" id="bookAuthor">
-        <label for="bookPages">Pages</label>
-        <input type="number" id="bookPages" min="1" max="9999">
-        <input type="radio" name="status" id="bookRead" class="statusRadio">
-        <label for="bookRead">Read</label>
-        <input type="radio" name="status" id="bookReading" class="statusRadio">
-        <label for="bookReading">Reading</label>
-        <input type="radio" name="status" id="bookUnread" class="statusRadio">
-        <label for="bookUnread">Unread</label>
+    <form action="" id="bookForm">
+        <div id="textFormDiv">
+            <label for="bookTitle">Title</label>
+            <input type="text" id="bookTitle">
+            <label for="bookAuthor">Author</label>
+            <input type="text" id="bookAuthor">
+            <label for="bookPages">Pages</label>
+            <input type="number" id="bookPages" min="1" max="9999">
+        </div>
+        <div id="radioFormDiv">
+            <input type="radio" name="status" id="bookRead" class="statusRadio">
+            <label for="bookRead">Read</label>
+            <input type="radio" name="status" id="bookReading" class="statusRadio">
+            <label for="bookReading">Reading</label>
+            <input type="radio" name="status" id="bookUnread" class="statusRadio">
+            <label for="bookUnread">Unread</label>
+        </div>
         <input type="submit" id="submitBtn">
     </form>
     <button id="newBook">+</button>

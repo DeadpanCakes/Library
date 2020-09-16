@@ -98,6 +98,7 @@ const cardProcesses = (() => {
 
     const makeCard = obj => {
         let li = makeLi();
+        li.classList.add("card");
 
         let delBtn = makeBtn();
         delBtn.textContent = "X"

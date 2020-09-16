@@ -46,3 +46,28 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+
+#bookForm {
+	display: flex;
+	flex-direction: row;
+}
+
+#textFormDiv {
+	display: flex;
+	flex-direction: column;
+}
+
+#radioFormDiv {
+	display: flex;
+	flex-direction: column;
+}
+
+.card {
+	display: flex;
+	flex-direction: row;
+}
+
+.statusColor {
+	height: 80px;
+	width: 30px;
+}
