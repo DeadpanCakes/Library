@@ -47,6 +47,14 @@ table {
 	border-spacing: 0;
 }
 
+#content {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-evenly;
+	align-items: stretch;
+	width: 1000px;
+}
+
 #bookForm {
 	display: flex;
 	flex-direction: row;
@@ -63,11 +71,31 @@ table {
 }
 
 .card {
-	display: flex;
-	flex-direction: row;
+	background-color: thistle;
+	display: grid;
+	grid-template-columns: 50px 850fr 100px;
+	grid-template-rows: 1fr 3fr;
+	height: 80px;
+}
+
+.delBtn {
+	grid-column: 1/1;
+}
+
+.info {
+	grid-column: 2/2;
+	grid-row: 2/2;
+}
+
+.toggleBtns {
+	grid-column: 3/3;
+	grid-row: 1/3;
+	width: 70px
 }
 
 .statusColor {
+	grid-column: 4/4;
+	grid-row: 1/3;
 	height: 80px;
 	width: 30px;
 }

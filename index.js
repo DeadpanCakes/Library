@@ -101,7 +101,8 @@ const cardProcesses = (() => {
         li.classList.add("card");
 
         let delBtn = makeBtn();
-        delBtn.textContent = "X"
+        delBtn.classList.add("delBtn");
+        delBtn.textContent = "X";
         delBtn.addEventListener("click", e => {
                 bookShelfArr = delCard(checkCard(e));
                 renderShelf(bookShelfArr);
@@ -109,8 +110,10 @@ const cardProcesses = (() => {
 
         let h1 = makeH1();
         h1.textContent = obj.printInfo();
+        h1.classList.add("info");
 
         let toggleBtn = makeBtn();
+        toggleBtn.classList.add("toggleBtns")
         toggleBtn.textContent = obj.status;
         toggleBtn.addEventListener("click", () => {
             obj.toggleStatus();
