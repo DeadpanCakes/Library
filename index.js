@@ -43,7 +43,7 @@ const karamazov = new Book("The Brothers Karamazov", "Fyodor Dostoevsky", 840, "
 const warAndPeace = new Book("War And Peace", "Leo Tolstoy", 1225, "Reading");
 const metamorphosis = new Book("The Metamorphosis", "Franz Kafka", 58, "Read");
 
-let bookShelfArr = [karamazov, warAndPeace,metamorphosis];
+let bookShelfArr = [karamazov, warAndPeace, metamorphosis];
 const content = document.getElementById("content")
 
 function Book(title, author, pgCount, status) {
@@ -79,6 +79,9 @@ const formProceses = (() => {
         return checked;
     }
 
+    const newBook = document.getElementById("newBook");
+    newBook.addEventListener("click", () => anim.shiftElementUp(document.getElementById("formContainer")))
+
     submitBtn.addEventListener("click", e => {
         e.preventDefault();
         const title = bookTitle.value;
@@ -104,8 +107,13 @@ const cardProcesses = (() => {
         delBtn.classList.add("delBtn");
         delBtn.textContent = "X";
         delBtn.addEventListener("click", e => {
-                bookShelfArr = delCard(checkCard(e));
+            const index = checkCard(e);
+            const childNodes = Array.from(content.childNodes);
+            anim.animateDeletion(childNodes, index);
+            setTimeout(() => {
+                bookShelfArr = delCard(index);
                 renderShelf(bookShelfArr);
+            }, 2000)
         });
 
         let h1 = makeH1();
@@ -137,8 +145,8 @@ const cardProcesses = (() => {
     };
 
     const delCard = (index) => {
-        const booksBefore = bookShelfArr.slice(0,index);
-        const booksAfter = bookShelfArr.slice(index+1);
+        const booksBefore = bookShelfArr.slice(0, index);
+        const booksAfter = bookShelfArr.slice(index + 1);
         return booksBefore.concat(booksAfter);
     }
 
@@ -155,7 +163,7 @@ const cardProcesses = (() => {
 
     const initShelf = () => {
         if (!!content.childElementCount) {
-            for (let i = 0, length=content.childNodes.length; i < length; i++) {
+            for (let i = 0, length = content.childNodes.length; i < length; i++) {
                 content.removeChild(content.lastElementChild);
             };
         }
@@ -169,6 +177,37 @@ const cardProcesses = (() => {
     };
 
     return { initShelf, renderShelf }
+})();
+
+const anim = (() => {
+    const shiftElementUp = element => {
+        element.animate([
+            { transform: "translate(0,0)", offset: 0 },
+            { transform: "translate(0,-100%)", offset: 1 }
+        ], {
+            duration: 500,
+            easing: "ease-in-out",
+            fill: "forwards"
+        })
+    }
+    const hideElement = element => {
+        element.animate([
+            { opacity: 1, offset: 0 },
+            { opacity: 0, offset: 1 }
+        ], {
+            duration: 500,
+            easing: "linear",
+            fill: "forwards"
+        })
+        console.log(element)
+    }
+    const animateDeletion = (nodeList, index) => {
+        hideElement(nodeList[index]);
+        for (let i = index + 1; i < nodeList.length; i++) {
+            shiftElementUp(nodeList[i]);
+        }
+    }
+    return { shiftElementUp, animateDeletion, hideElement }
 })();
 
 cardProcesses.renderShelf(bookShelfArr);

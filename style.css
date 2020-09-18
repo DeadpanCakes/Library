@@ -47,6 +47,10 @@ table {
 	border-spacing: 0;
 }
 
+h1 {
+	font-size: 1.8em;
+}
+
 #content {
 	display: flex;
 	flex-direction: column;
@@ -56,6 +60,18 @@ table {
 }
 
 #bookForm {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	width: 100%;
+}
+
+#submitBtn {
+	align-self: flex-end;
+	margin-right: 15%;
+}
+
+#inputDiv {
 	display: flex;
 	flex-direction: row;
 }
@@ -99,3 +115,15 @@ table {
 	height: 80px;
 	width: 30px;
 }
+
+/* .anim {
+	animation: hideForm .3s ease-in-out alternate forwards;
+	height: 150px;
+}
+
+@keyframes hideForm {
+	0% {}
+	100% {
+		transform: translate(0%, -90%);
+	}
+} */
