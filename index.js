@@ -54,7 +54,7 @@ function Book(title, author, pgCount, status) {
         this.status = status,
         this.toggleStatus = () => {
             if (this.status === "Unread") {
-                this.status = "Reading"
+                this.status = "Reading";
             } else if (this.status === "Reading") {
                 this.status = "Read";
             } else {
@@ -89,7 +89,8 @@ const formProceses = (() => {
         const pages = bookPages.value;
         const status = findChecked(statusRadios);
         bookShelfArr.push(new Book(title, author, pages, status));
-        cardProcesses.renderShelf(bookShelfArr);
+        cardProcesses.addCard(bookShelfArr[bookShelfArr.length-1]);
+        anim.showNewElement(content.lastElementChild);
     });
 })();
 
@@ -107,13 +108,17 @@ const cardProcesses = (() => {
         delBtn.classList.add("delBtn");
         delBtn.textContent = "X";
         delBtn.addEventListener("click", e => {
-            const index = checkCard(e);
-            const childNodes = Array.from(content.childNodes);
-            anim.animateDeletion(childNodes, index);
-            setTimeout(() => {
-                bookShelfArr = delCard(index);
-                renderShelf(bookShelfArr);
-            }, 2000)
+            if (!anim.getAnimPlaying()) {
+                anim.toggleAnim();
+                const index = checkCard(e);
+                const childNodes = Array.from(content.childNodes);
+                anim.animateDeletion(childNodes, index);
+                setTimeout(() => {
+                    bookShelfArr = delCard(index);
+                    renderShelf(bookShelfArr);
+                    anim.toggleAnim();
+                }, 500)
+            };
         });
 
         let h1 = makeH1();
@@ -169,6 +174,12 @@ const cardProcesses = (() => {
         }
     };
 
+    const addCard = book => {
+        const card = makeCard(book);
+        card.style.opacity = 0;
+        content.appendChild(card);
+    }
+
     const renderShelf = (shelfArr) => {
         initShelf();
         for (let i = 0; i < shelfArr.length; i++) {
@@ -176,10 +187,14 @@ const cardProcesses = (() => {
         };
     };
 
-    return { initShelf, renderShelf }
+    return { initShelf, addCard, renderShelf }
 })();
 
 const anim = (() => {
+    let animPlaying = false;
+    const getAnimPlaying = () => animPlaying;
+    const toggleAnim = () => animPlaying? animPlaying = false : animPlaying = true; 
+
     const shiftElementUp = element => {
         element.animate([
             { transform: "translate(0,0)", offset: 0 },
@@ -189,7 +204,7 @@ const anim = (() => {
             easing: "ease-in-out",
             fill: "forwards"
         })
-    }
+    };
     const hideElement = element => {
         element.animate([
             { opacity: 1, offset: 0 },
@@ -198,16 +213,26 @@ const anim = (() => {
             duration: 500,
             easing: "linear",
             fill: "forwards"
-        })
-        console.log(element)
+        });
+    };
+    const showNewElement = element => {
+        element.animate([
+            { opacity: 0, offset: 0 },
+            { opacity: 1, offset: 1 }
+        ], {
+            duration: 500,
+            easing: "linear",
+            fill: "forwards"
+        });
+        console.log("Running on: " + element);
     }
     const animateDeletion = (nodeList, index) => {
         hideElement(nodeList[index]);
         for (let i = index + 1; i < nodeList.length; i++) {
             shiftElementUp(nodeList[i]);
-        }
-    }
-    return { shiftElementUp, animateDeletion, hideElement }
+        };
+    };
+    return { getAnimPlaying, toggleAnim, shiftElementUp, hideElement, showNewElement, animateDeletion }
 })();
 
 cardProcesses.renderShelf(bookShelfArr);
