@@ -15,24 +15,11 @@ Output? The form inputs will submit the form, instantiating a new object which w
 an array. After this, the array will be looped through, generating div elements displaying all the relevant information by accessing each object and their
 properties. These divs will then be appended on to the page in order.
 
-write a fn to discern which card a button press corresponds to
-const checkCard = (event) =>  {
-    let card = event.parentElement.parentElement
-    index = bookShelf.childNodes.indexOf(card)
-    bookshelfArr[index].toggleStatus();
-}
+form validation
 
+clear fields upon submit
 
-write a fn to attach to a button that displays and hides the form
-const = toggleForm => (element) {
-    if (!!element.classList[0]) {
-        element.classList.remove("animateShow");
-    } else {
-        element.classList.add("animateShow");
-    }
-}
-
-animate the displaying and hiding of the form
+newBook should change in content depending on formProcesses.formShowing
 
 test obj:
 let karamazov = new Book("The Brothers Karamazov","Fyodor Dostoevsky","840","Read");
@@ -41,9 +28,9 @@ let warAndPeace = new Book("War And Peace", "Leo Tolstoy", "1225", "Reading");
 
 const karamazov = new Book("The Brothers Karamazov", "Fyodor Dostoevsky", 840, "Read");
 const warAndPeace = new Book("War And Peace", "Leo Tolstoy", 1225, "Reading");
-const metamorphosis = new Book("The Metamorphosis", "Franz Kafka", 58, "Read");
+const solitude = new Book("100 Years Of Solitude", "Gabriel Garcia Marquez", 448, "Unread");
 
-let bookShelfArr = [karamazov, warAndPeace, metamorphosis];
+let bookShelfArr = [karamazov, warAndPeace, solitude];
 const content = document.getElementById("content")
 
 function Book(title, author, pgCount, status) {
@@ -64,6 +51,11 @@ function Book(title, author, pgCount, status) {
 }
 
 const formProceses = (() => {
+    let formShowing = true;
+    const toggleFormShowing = () => formShowing? formShowing = false : formShowing = true;
+
+    const formContainer = document.getElementById("formContainer");
+    const bookForm = document.getElementById("bookForm");
     const submitBtn = document.getElementById("submitBtn");
     const bookTitle = document.getElementById("bookTitle");
     const bookAuthor = document.getElementById("bookAuthor");
@@ -80,7 +72,15 @@ const formProceses = (() => {
     }
 
     const newBook = document.getElementById("newBook");
-    newBook.addEventListener("click", () => anim.shiftElementUp(document.getElementById("formContainer")))
+    newBook.addEventListener("click", () => {
+        if (formShowing) {
+            anim.shiftElementRight(formContainer)
+            toggleFormShowing();
+        } else {
+            anim.shiftElementLeft(formContainer);
+            toggleFormShowing();
+        }
+    })
 
     submitBtn.addEventListener("click", e => {
         e.preventDefault();
@@ -91,6 +91,9 @@ const formProceses = (() => {
         bookShelfArr.push(new Book(title, author, pages, status));
         cardProcesses.addCard(bookShelfArr[bookShelfArr.length-1]);
         anim.showNewElement(content.lastElementChild);
+        anim.shiftElementRight(formContainer);
+        toggleFormShowing();
+        bookForm.reset();
     });
 })();
 
@@ -158,11 +161,11 @@ const cardProcesses = (() => {
     const determineColor = (status) => {
         switch (status) {
             case "Read":
-                return "green";
+                return "#231651";
             case "Reading":
-                return "blue";
+                return "#2374AB";
             case "Unread":
-                return "red";
+                return "#4DCCBD";
         };
     };
 
@@ -203,8 +206,28 @@ const anim = (() => {
             duration: 500,
             easing: "ease-in-out",
             fill: "forwards"
-        })
+        });
     };
+    const shiftElementRight = element => {
+        element.animate([
+            { transform: "translate(0,0)", offset: 0 },
+            { transform: "translate(100%,0%)", offset: 1 }
+        ], {
+            duration: 500,
+            easing: "ease-in-out",
+            fill: "forwards"
+        });
+    }
+    const shiftElementLeft = element => {
+        element.animate([
+            { transform: "translate(100%,0)", offset: 0 },
+            { transform: "translate(0%,0%)", offset: 1 }
+        ], {
+            duration: 500,
+            easing: "ease-in-out",
+            fill: "forwards"
+        });
+    }
     const hideElement = element => {
         element.animate([
             { opacity: 1, offset: 0 },
@@ -232,7 +255,7 @@ const anim = (() => {
             shiftElementUp(nodeList[i]);
         };
     };
-    return { getAnimPlaying, toggleAnim, shiftElementUp, hideElement, showNewElement, animateDeletion }
+    return { getAnimPlaying, toggleAnim, shiftElementUp, shiftElementRight, shiftElementLeft, hideElement, showNewElement, animateDeletion }
 })();
 
 cardProcesses.renderShelf(bookShelfArr);
