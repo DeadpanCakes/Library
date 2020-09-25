@@ -26,6 +26,25 @@ let karamazov = new Book("The Brothers Karamazov","Fyodor Dostoevsky","840","Rea
 let warAndPeace = new Book("War And Peace", "Leo Tolstoy", "1225", "Reading");
 */
 
+class Book {
+    constructor(title, author, pgCount, status) {
+        this.title = title,
+            this.author = author,
+            this.pgCount = pgCount,
+            this.printInfo = () => title + " by " + author + ", " + pgCount + "pgs",
+            this.status = status,
+            this.toggleStatus = () => {
+                if (this.status === "Unread") {
+                    this.status = "Reading";
+                } else if (this.status === "Reading") {
+                    this.status = "Read";
+                } else {
+                    this.status = "Unread";
+                }
+            }
+    }
+}
+
 const karamazov = new Book("The Brothers Karamazov", "Fyodor Dostoevsky", 840, "Read");
 const warAndPeace = new Book("War And Peace", "Leo Tolstoy", 1225, "Reading");
 const solitude = new Book("100 Years Of Solitude", "Gabriel Garcia Marquez", 448, "Unread");
@@ -33,26 +52,9 @@ const solitude = new Book("100 Years Of Solitude", "Gabriel Garcia Marquez", 448
 let bookShelfArr = [karamazov, warAndPeace, solitude];
 const content = document.getElementById("content")
 
-function Book(title, author, pgCount, status) {
-    this.title = title,
-        this.author = author,
-        this.pgCount = pgCount,
-        this.printInfo = () => title + " by " + author + ", " + pgCount + "pgs",
-        this.status = status,
-        this.toggleStatus = () => {
-            if (this.status === "Unread") {
-                this.status = "Reading";
-            } else if (this.status === "Reading") {
-                this.status = "Read";
-            } else {
-                this.status = "Unread";
-            }
-        }
-}
-
 const formProceses = (() => {
     let formShowing = true;
-    const toggleFormShowing = () => formShowing? formShowing = false : formShowing = true;
+    const toggleFormShowing = () => formShowing ? formShowing = false : formShowing = true;
 
     const formContainer = document.getElementById("formContainer");
     const bookForm = document.getElementById("bookForm");
@@ -89,7 +91,7 @@ const formProceses = (() => {
         const pages = bookPages.value;
         const status = findChecked(statusRadios);
         bookShelfArr.push(new Book(title, author, pages, status));
-        cardProcesses.addCard(bookShelfArr[bookShelfArr.length-1]);
+        cardProcesses.addCard(bookShelfArr[bookShelfArr.length - 1]);
         anim.showNewElement(content.lastElementChild);
         anim.shiftElementRight(formContainer);
         toggleFormShowing();
@@ -196,7 +198,7 @@ const cardProcesses = (() => {
 const anim = (() => {
     let animPlaying = false;
     const getAnimPlaying = () => animPlaying;
-    const toggleAnim = () => animPlaying? animPlaying = false : animPlaying = true; 
+    const toggleAnim = () => animPlaying ? animPlaying = false : animPlaying = true;
 
     const shiftElementUp = element => {
         element.animate([

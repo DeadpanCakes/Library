@@ -102,6 +102,10 @@ body {
 	color: #191308;
 }
 
+#submitBtn:hover {
+	background-color: #738bce;
+}
+
 #inputDiv {
 	display: flex;
 	flex-direction: row;
@@ -130,6 +134,10 @@ body {
 	font-size: 1em;
 }
 
+#newBook:hover {
+	background-color:  #738bce;
+}
+
 .card {
 	background-color: #9CA3DB;
 	display: grid;
@@ -146,6 +154,10 @@ body {
 	padding: 5px;
 }
 
+.delBtn:hover {
+	text-shadow: 1px 1px 10px #ffffff;
+}
+
 .info {
 	grid-column: 2/2;
 	grid-row: 2/2;
@@ -156,6 +168,10 @@ body {
 	grid-row: 1/3;
 	width: 70px;
 	background-color: #8288b9;
+}
+
+.toggleBtns:hover {
+	background-color: #8e95ca;
 }
 
 .statusColor {
