@@ -18,5 +18,9 @@
   "homepage": "https://github.com/DeadpanCakes/Library#readme",
   "dependencies": {
     "firebase": "^9.0.2"
+  },
+  "devDependencies": {
+    "webpack": "^5.52.1",
+    "webpack-cli": "^4.8.0"
   }
 }

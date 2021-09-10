@@ -130,8 +130,8 @@ const formProceses = (() => {
     return checked;
   };
 
-  const newBook = document.getElementById("newBook");
-  newBook.addEventListener("click", () => {
+  const newBook = () => document.getElementById("newBook");
+  newBook().addEventListener("click", () => {
     if (formShowing) {
       anim.shiftElementRight(formContainer);
       toggleFormShowing();

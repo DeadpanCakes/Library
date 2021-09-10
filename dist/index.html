@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+<head>
+  <link rel="stylesheet" href="style.css" />
+  <title>Library</title>
+  <meta charset="UTF-8" />
+  <script src="./main.js"></script>
+</head>
+
+<body>
+  <div id="formContainer">
+    <form action="" id="bookForm">
+      <div id="inputDiv">
+        <div id="textFormDiv">
+          <label for="bookTitle">Title</label>
+          <input type="text" id="bookTitle" />
+          <label for="bookAuthor">Author</label>
+          <input type="text" id="bookAuthor" />
+          <label for="bookPages">Pages</label>
+          <input type="number" id="bookPages" min="1" max="9999" />
+        </div>
+        <div id="radioFormDiv">
+          <label for="bookRead">Read</label>
+          <input type="radio" name="status" id="bookRead" class="statusRadio" />
+          <label for="bookReading">Reading</label>
+          <input
+            type="radio"
+            name="status"
+            id="bookReading"
+            class="statusRadio"
+          />
+          <label for="bookUnread">Unread</label>
+          <input
+            type="radio"
+            name="status"
+            id="bookUnread"
+            class="statusRadio"
+          />
+        </div>
+      </div>
+      <input type="submit" id="submitBtn" value="Submit" />
+    </form>
+  </div>
+  <button id="newBook">+</button>
+  <h1 id="title">Library</h1>
+  <ul id="content"></ul>
+</body>
