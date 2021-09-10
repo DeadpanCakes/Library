@@ -37,6 +37,15 @@ const fireBase = initializeApp({
   appId: "1:405656357801:web:a4c7afd131710a4e5012b8",
 });
 
+const addBookToDB = async (book) => {
+  try {
+    await addDoc(collection(fireBase, "shelf"), book);
+    console.log(`${book.name} added to shelf`);
+  } catch {
+    console.error("Error adding book to shelf", error);
+  }
+};
+
 class Book {
   constructor(title, author, pgCount, status) {
     (this.title = title),
