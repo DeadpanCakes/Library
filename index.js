@@ -27,7 +27,7 @@ let warAndPeace = new Book("War And Peace", "Leo Tolstoy", "1225", "Reading");
 */
 
 import { initializeApp } from "firebase/app";
-import { addDoc, collection, getDoc } from "firebase/firestore";
+import { addDoc, collection, getDoc, getFirestore } from "firebase/firestore";
 const fireBase = initializeApp({
   apiKey: "AIzaSyBgm37ckHS83RUfvHUrPpuXNT9-PHc1578",
   authDomain: "library-a7ff2.firebaseapp.com",
@@ -37,9 +37,13 @@ const fireBase = initializeApp({
   appId: "1:405656357801:web:a4c7afd131710a4e5012b8",
 });
 
+const fetchShelf = async () => {
+
+}
+
 const addBookToDB = async (book) => {
   try {
-    await addDoc(collection(fireBase, "shelf"), book);
+    await addDoc(collection(getFireStore(fireBase), "shelf"), book);
     console.log(`${book.name} added to shelf`);
   } catch {
     console.error("Error adding book to shelf", error);
