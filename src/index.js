@@ -36,6 +36,12 @@ import {
   orderBy,
   query,
 } from "firebase/firestore";
+import form from "./elements/form";
+import formContainer from "./elements/formContainer";
+import newBookBtn from "./elements/newBookBtn";
+import radioContainer from "./elements/radioContainer";
+import textInput from "./elements/textInput";
+
 const fireBase = initializeApp({
   apiKey: "AIzaSyBgm37ckHS83RUfvHUrPpuXNT9-PHc1578",
   authDomain: "library-a7ff2.firebaseapp.com",
@@ -71,6 +77,11 @@ const addBookToDB = async (book) => {
     console.error("Error adding book to shelf", error);
   }
 };
+
+//Static DOM
+const root = document.getElementById("root");
+root.appendChild(formContainer)
+root.appendChild(newBookBtn);
 
 class Book {
   constructor(title, author, pgCount, status) {
@@ -130,13 +141,12 @@ const formProceses = (() => {
     return checked;
   };
 
-  const newBook = () => document.getElementById("newBook");
-  newBook().addEventListener("click", () => {
+  newBookBtn.addEventListener("click", () => {
     if (formShowing) {
-      anim.shiftElementRight(formContainer);
+      //hide
       toggleFormShowing();
     } else {
-      anim.shiftElementLeft(formContainer);
+      //display
       toggleFormShowing();
     }
   });
@@ -151,8 +161,6 @@ const formProceses = (() => {
     const status = findChecked(statusRadios);
     bookShelfArr.push(new Book(title, author, pages, status));
     cardProcesses.addCard(bookShelfArr[bookShelfArr.length - 1]);
-    anim.showNewElement(content.lastElementChild);
-    anim.shiftElementRight(formContainer);
     toggleFormShowing();
     bookForm.reset();
     //} else {
@@ -243,7 +251,6 @@ const cardProcesses = (() => {
 
   const addCard = (book) => {
     const card = makeCard(book);
-    card.style.opacity = 0;
     content.appendChild(card);
   };
 
@@ -255,96 +262,6 @@ const cardProcesses = (() => {
   };
 
   return { initShelf, addCard, renderShelf };
-})();
-
-const anim = (() => {
-  let animPlaying = false;
-  const getAnimPlaying = () => animPlaying;
-  const toggleAnim = () =>
-    animPlaying ? (animPlaying = false) : (animPlaying = true);
-
-  const shiftElementUp = (element) => {
-    element.animate(
-      [
-        { transform: "translate(0,0)", offset: 0 },
-        { transform: "translate(0,-100%)", offset: 1 },
-      ],
-      {
-        duration: 500,
-        easing: "ease-in-out",
-        fill: "forwards",
-      }
-    );
-  };
-  const shiftElementRight = (element) => {
-    element.animate(
-      [
-        { transform: "translate(0,0)", offset: 0 },
-        { transform: "translate(100%,0%)", offset: 1 },
-      ],
-      {
-        duration: 500,
-        easing: "ease-in-out",
-        fill: "forwards",
-      }
-    );
-  };
-  const shiftElementLeft = (element) => {
-    element.animate(
-      [
-        { transform: "translate(100%,0)", offset: 0 },
-        { transform: "translate(0%,0%)", offset: 1 },
-      ],
-      {
-        duration: 500,
-        easing: "ease-in-out",
-        fill: "forwards",
-      }
-    );
-  };
-  const hideElement = (element) => {
-    element.animate(
-      [
-        { opacity: 1, offset: 0 },
-        { opacity: 0, offset: 1 },
-      ],
-      {
-        duration: 500,
-        easing: "linear",
-        fill: "forwards",
-      }
-    );
-  };
-  const showNewElement = (element) => {
-    element.animate(
-      [
-        { opacity: 0, offset: 0 },
-        { opacity: 1, offset: 1 },
-      ],
-      {
-        duration: 500,
-        easing: "linear",
-        fill: "forwards",
-      }
-    );
-    console.log("Running on: " + element);
-  };
-  const animateDeletion = (nodeList, index) => {
-    hideElement(nodeList[index]);
-    for (let i = index + 1; i < nodeList.length; i++) {
-      shiftElementUp(nodeList[i]);
-    }
-  };
-  return {
-    getAnimPlaying,
-    toggleAnim,
-    shiftElementUp,
-    shiftElementRight,
-    shiftElementLeft,
-    hideElement,
-    showNewElement,
-    animateDeletion,
-  };
 })();
 
 cardProcesses.renderShelf(bookShelfArr);
