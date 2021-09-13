@@ -71,16 +71,16 @@ const fetchShelf = async () => {
 
 const addBookToDB = async (book) => {
   try {
-    await addDoc(collection(getFirestore(fireBase), "shelf"), book);
-    console.log(`${book.name} added to shelf`);
-  } catch {
+    await addDoc(collection(getFirestore(fireBase), "shelf"), { ...book });
+    console.log(`${book.title} added to shelf`);
+  } catch (error) {
     console.error("Error adding book to shelf", error);
   }
 };
 
 //Static DOM
 const root = document.getElementById("root");
-root.appendChild(formContainer)
+root.appendChild(formContainer);
 root.appendChild(newBookBtn);
 
 class Book {
@@ -88,17 +88,7 @@ class Book {
     (this.title = title),
       (this.author = author),
       (this.pgCount = pgCount),
-      (this.printInfo = () => title + " by " + author + ", " + pgCount + "pgs"),
-      (this.status = status),
-      (this.toggleStatus = () => {
-        if (this.status === "Unread") {
-          this.status = "Reading";
-        } else if (this.status === "Reading") {
-          this.status = "Read";
-        } else {
-          this.status = "Unread";
-        }
-      });
+      (this.status = status);
   }
 }
 
@@ -159,6 +149,8 @@ const formProceses = (() => {
     const author = bookAuthor.value;
     const pages = bookPages.value;
     const status = findChecked(statusRadios);
+    const book = new Book(title, author, pages, status);
+    addBookToDB(book);
     bookShelfArr.push(new Book(title, author, pages, status));
     cardProcesses.addCard(bookShelfArr[bookShelfArr.length - 1]);
     toggleFormShowing();
@@ -183,28 +175,20 @@ const cardProcesses = (() => {
     delBtn.classList.add("delBtn");
     delBtn.textContent = "X";
     delBtn.addEventListener("click", (e) => {
-      if (!anim.getAnimPlaying()) {
-        anim.toggleAnim();
-        const index = checkCard(e);
-        const childNodes = Array.from(content.childNodes);
-        anim.animateDeletion(childNodes, index);
-        setTimeout(() => {
-          bookShelfArr = delCard(index);
-          renderShelf(bookShelfArr);
-          anim.toggleAnim();
-        }, 500);
-      }
+      const element = e.target.parentElement;
+      content.removeChild(element);
     });
 
     let h1 = makeH1();
-    h1.textContent = obj.printInfo();
+    h1.textContent =
+      obj.title + " by " + obj.author + ", " + obj.pgCount + "pgs";
     h1.classList.add("info");
 
     let toggleBtn = makeBtn();
     toggleBtn.classList.add("toggleBtns");
     toggleBtn.textContent = obj.status;
     toggleBtn.addEventListener("click", () => {
-      obj.toggleStatus();
+      //change status in db
       renderShelf(bookShelfArr);
     });
 
@@ -216,18 +200,6 @@ const cardProcesses = (() => {
     li.appendChild(toggleBtn);
     li.appendChild(div);
     return li;
-  };
-
-  const checkCard = (e) => {
-    const card = e.target.parentElement;
-    const arr = Array.from(content.childNodes);
-    return arr.indexOf(card);
-  };
-
-  const delCard = (index) => {
-    const booksBefore = bookShelfArr.slice(0, index);
-    const booksAfter = bookShelfArr.slice(index + 1);
-    return booksBefore.concat(booksAfter);
   };
 
   const determineColor = (status) => {
@@ -256,9 +228,10 @@ const cardProcesses = (() => {
 
   const renderShelf = (shelfArr) => {
     initShelf();
-    for (let i = 0; i < shelfArr.length; i++) {
-      content.appendChild(makeCard(shelfArr[i]));
-    }
+    shelfArr.forEach((book) => {
+      const newCard = makeCard(book);
+      content.appendChild(newCard);
+    });
   };
 
   return { initShelf, addCard, renderShelf };
