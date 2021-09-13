@@ -40,7 +40,6 @@ import form from "./elements/form";
 import formContainer from "./elements/formContainer";
 import newBookBtn from "./elements/newBookBtn";
 import radioContainer from "./elements/radioContainer";
-import textInput from "./elements/textInput";
 
 const fireBase = initializeApp({
   apiKey: "AIzaSyBgm37ckHS83RUfvHUrPpuXNT9-PHc1578",
@@ -141,7 +140,7 @@ const formProceses = (() => {
     }
   });
 
-  submitBtn.addEventListener("click", (e) => {
+  form.addEventListener("submit", (e) => {
     //validation
     // if (form.children.every = valid) {
     e.preventDefault();

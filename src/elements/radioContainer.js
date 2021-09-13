@@ -12,6 +12,7 @@ bookRead.type = "radio";
 bookRead.name = "status";
 bookRead.classList.add("statusRadio");
 bookRead.id = "bookRead";
+bookRead.required = true;
 readLabel.appendChild(bookRead);
 
 const readingLabel = makeLabel();
