@@ -30,6 +30,9 @@ import { initializeApp } from "firebase/app";
 import {
   addDoc,
   collection,
+  doc,
+  deleteDoc,
+  getDoc,
   getDocs,
   getFirestore,
   onSnapshot,
@@ -51,29 +54,31 @@ const firebase = initializeApp({
 });
 const db = getFirestore(firebase);
 
-const test = () => {
+const fetchShelf = () => {
   onSnapshot(collection(db, "shelf"), async (snapshot) => {
     snapshot.docChanges().forEach((change) => {
       if (change.type === "removed") {
-        console.log("delete book ", change.doc.data());
       } else if (change.type === "added") {
         const { title, author, pgCount, status } = change.doc;
         const newBook = bookFactory(title, author, pgCount, status);
         cardProcesses.renderBook(newBook);
       } else {
-        console.log("modify target id")
+        console.log("modify target id");
       }
     });
     cardProcesses.initShelf();
     displayShelf();
   });
 };
-test();
+fetchShelf();
 
 const getShelf = async (db) => {
   const shelfCol = collection(db, "shelf");
   const shelfSnapshot = await getDocs(shelfCol);
-  const shelfData = shelfSnapshot.docs.map((doc) => doc.data());
+  const shelfData = shelfSnapshot.docs.map((doc) => {
+    const { title, author, pgCount, status } = doc.data();
+    return bookFactory(doc.id, title, author, pgCount, status);
+  });
   return shelfData;
 };
 
@@ -93,6 +98,18 @@ const addBookToDB = async (book) => {
   }
 };
 
+const removeBookFromDB = async (id) => {
+  try {
+    const docRef = doc(db, "shelf", id);
+    const docSnapshot = await getDoc(docRef);
+    const bookTitle = docSnapshot.data().title;
+    deleteDoc(docRef);
+    console.log(`${bookTitle} removed from database`);
+  } catch (error) {
+    console.error("Error removing book from shelf", error);
+  }
+};
+
 //Static DOM
 const root = document.getElementById("root");
 root.appendChild(formContainer);
@@ -100,8 +117,9 @@ root.appendChild(newBookBtn);
 
 const content = document.getElementById("content");
 
-const bookFactory = (title, author, pgCount, status) => {
+const bookFactory = (id, title, author, pgCount, status) => {
   return {
+    id,
     title,
     author,
     pgCount,
@@ -141,9 +159,9 @@ const formProceses = (() => {
     e.preventDefault();
     const title = bookTitle.value;
     const author = bookAuthor.value;
-    const pages = bookPages.value;
+    const pgCount = bookPages.value;
     const status = findChecked(statusRadios);
-    const book = bookFactory(title, author, pages, status);
+    const book = { title, author, pgCount, status };
     addBookToDB(book);
     toggleFormShowing();
     bookForm.reset();
@@ -167,14 +185,20 @@ const cardProcesses = (() => {
     delBtn.classList.add("delBtn");
     delBtn.textContent = "X";
     delBtn.addEventListener("click", (e) => {
-      const element = e.target.parentElement;
-      content.removeChild(element);
+      removeBookFromDB(obj.id);
     });
+
+    const contentDiv = makeDiv();
+    contentDiv.classList.add("info");
+
+    const p = document.createElement("p");
+    p.textContent = `ID: ${obj.id}`;
+    p.classList.add("bookIDs");
 
     let h1 = makeH1();
     h1.textContent =
       obj.title + " by " + obj.author + ", " + obj.pgCount + "pgs";
-    h1.classList.add("info");
+    h1.classList.add("bookTitles");
 
     let toggleBtn = makeBtn();
     toggleBtn.classList.add("toggleBtns");
@@ -188,7 +212,9 @@ const cardProcesses = (() => {
     div.classList.add("statusColor");
     div.style.backgroundColor = determineColor(obj.status);
     li.appendChild(delBtn);
-    li.appendChild(h1);
+    contentDiv.appendChild(p);
+    contentDiv.appendChild(h1);
+    li.appendChild(contentDiv);
     li.appendChild(toggleBtn);
     li.appendChild(div);
     return li;
