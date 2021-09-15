@@ -38,6 +38,7 @@ import {
   onSnapshot,
   orderBy,
   query,
+  setDoc,
 } from "firebase/firestore";
 import form from "./elements/form";
 import formContainer from "./elements/formContainer";
@@ -107,6 +108,34 @@ const removeBookFromDB = async (id) => {
     console.log(`${bookTitle} removed from database`);
   } catch (error) {
     console.error("Error removing book from shelf", error);
+  }
+};
+
+const toggleBookStatusInDB = async (id) => {
+  try {
+    const docRef = doc(db, "shelf", id);
+    const docSnapshot = await getDoc(docRef);
+    const bookTitle = docSnapshot.data().title;
+    const findNextStatus = (currStatus) => {
+      switch (currStatus) {
+        case "Read":
+          return "Reading";
+        case "Reading":
+          return "Not Started";
+        case "Not Started":
+          return "Read";
+        default:
+          return "Read";
+      }
+    };
+    const newStatus = findNextStatus(docSnapshot.data().status);
+    setDoc(docRef, {
+      ...docSnapshot.data(),
+      status: newStatus,
+    });
+    console.log(`${bookTitle} status changed to ${newStatus}`);
+  } catch (error) {
+    console.error("Error changing book status", error);
   }
 };
 
@@ -204,8 +233,7 @@ const cardProcesses = (() => {
     toggleBtn.classList.add("toggleBtns");
     toggleBtn.textContent = obj.status;
     toggleBtn.addEventListener("click", () => {
-      //change status in db
-      renderShelf(bookShelfArr);
+      toggleBookStatusInDB(obj.id);
     });
 
     let div = makeDiv();
