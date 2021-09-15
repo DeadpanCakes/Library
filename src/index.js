@@ -30,7 +30,7 @@ import { initializeApp } from "firebase/app";
 import {
   addDoc,
   collection,
-  getDoc,
+  getDocs,
   getFirestore,
   onSnapshot,
   orderBy,
@@ -41,7 +41,7 @@ import formContainer from "./elements/formContainer";
 import newBookBtn from "./elements/newBookBtn";
 import radioContainer from "./elements/radioContainer";
 
-const fireBase = initializeApp({
+const firebase = initializeApp({
   apiKey: "AIzaSyBgm37ckHS83RUfvHUrPpuXNT9-PHc1578",
   authDomain: "library-a7ff2.firebaseapp.com",
   projectId: "library-a7ff2",
@@ -49,28 +49,44 @@ const fireBase = initializeApp({
   messagingSenderId: "405656357801",
   appId: "1:405656357801:web:a4c7afd131710a4e5012b8",
 });
+const db = getFirestore(firebase);
 
-const fetchShelf = async () => {
-  const shelfQuery = query(
-    collection(getFirestore(), "shelf"),
-    orderBy("name", "asc")
-  );
-
-  onSnapshot(shelfQuery, (snapshot) => {
+const test = () => {
+  onSnapshot(collection(db, "shelf"), async (snapshot) => {
     snapshot.docChanges().forEach((change) => {
       if (change.type === "removed") {
-        delBook(change.doc.id);
+        console.log("delete book ", change.doc.data());
+      } else if (change.type === "added") {
+        const { title, author, pgCount, status } = change.doc;
+        const newBook = bookFactory(title, author, pgCount, status);
+        cardProcesses.renderBook(newBook);
       } else {
-        let book = change.doc.data();
-        renderBook(change.doc.id, book.title, book.pgCount, book.status);
+        console.log("modify target id")
       }
     });
+    cardProcesses.initShelf();
+    displayShelf();
   });
 };
+test();
+
+const getShelf = async (db) => {
+  const shelfCol = collection(db, "shelf");
+  const shelfSnapshot = await getDocs(shelfCol);
+  const shelfData = shelfSnapshot.docs.map((doc) => doc.data());
+  return shelfData;
+};
+
+const displayShelf = async () => {
+  const shelf = await getShelf(db);
+  cardProcesses.renderShelf(shelf);
+};
+
+displayShelf();
 
 const addBookToDB = async (book) => {
   try {
-    await addDoc(collection(getFirestore(fireBase), "shelf"), { ...book });
+    await addDoc(collection(getFirestore(firebase), "shelf"), { ...book });
     console.log(`${book.title} added to shelf`);
   } catch (error) {
     console.error("Error adding book to shelf", error);
@@ -82,31 +98,16 @@ const root = document.getElementById("root");
 root.appendChild(formContainer);
 root.appendChild(newBookBtn);
 
-class Book {
-  constructor(title, author, pgCount, status) {
-    (this.title = title),
-      (this.author = author),
-      (this.pgCount = pgCount),
-      (this.status = status);
-  }
-}
-
-const karamazov = new Book(
-  "The Brothers Karamazov",
-  "Fyodor Dostoevsky",
-  840,
-  "Read"
-);
-const warAndPeace = new Book("War And Peace", "Leo Tolstoy", 1225, "Reading");
-const solitude = new Book(
-  "100 Years Of Solitude",
-  "Gabriel Garcia Marquez",
-  448,
-  "Unread"
-);
-
-let bookShelfArr = [karamazov, warAndPeace, solitude];
 const content = document.getElementById("content");
+
+const bookFactory = (title, author, pgCount, status) => {
+  return {
+    title,
+    author,
+    pgCount,
+    status,
+  };
+};
 
 const formProceses = (() => {
   let formShowing = true;
@@ -121,13 +122,7 @@ const formProceses = (() => {
   const bookPages = document.getElementById("bookPages");
   const statusRadios = document.querySelectorAll(".statusRadio");
   const findChecked = (radios) => {
-    let checked;
-    for (let i = 0; i < radios.length; i++) {
-      if (radios[i].checked) {
-        checked = radios[i].labels[0].textContent;
-      }
-    }
-    return checked;
+    return Array.from(radios).find((radio) => radio.checked).value;
   };
 
   newBookBtn.addEventListener("click", () => {
@@ -148,10 +143,8 @@ const formProceses = (() => {
     const author = bookAuthor.value;
     const pages = bookPages.value;
     const status = findChecked(statusRadios);
-    const book = new Book(title, author, pages, status);
+    const book = bookFactory(title, author, pages, status);
     addBookToDB(book);
-    bookShelfArr.push(new Book(title, author, pages, status));
-    cardProcesses.addCard(bookShelfArr[bookShelfArr.length - 1]);
     toggleFormShowing();
     bookForm.reset();
     //} else {
@@ -225,15 +218,17 @@ const cardProcesses = (() => {
     content.appendChild(card);
   };
 
+  const renderBook = (book) => {
+    const newCard = makeCard(book);
+    content.appendChild(newCard);
+  };
+
   const renderShelf = (shelfArr) => {
     initShelf();
     shelfArr.forEach((book) => {
-      const newCard = makeCard(book);
-      content.appendChild(newCard);
+      renderBook(book);
     });
   };
 
-  return { initShelf, addCard, renderShelf };
+  return { initShelf, addCard, renderBook, renderShelf };
 })();
-
-cardProcesses.renderShelf(bookShelfArr);

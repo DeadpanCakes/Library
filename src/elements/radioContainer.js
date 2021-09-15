@@ -13,6 +13,7 @@ bookRead.name = "status";
 bookRead.classList.add("statusRadio");
 bookRead.id = "bookRead";
 bookRead.required = true;
+bookRead.value = "Read";
 readLabel.appendChild(bookRead);
 
 const readingLabel = makeLabel();
@@ -23,6 +24,7 @@ bookReading.type = "radio";
 bookReading.name = "status";
 bookReading.classList.add("statusRadio");
 bookReading.id = "bookReading";
+bookReading.value = "Reading";
 readingLabel.appendChild(bookReading);
 
 const unreadLabel = makeLabel();
@@ -33,6 +35,7 @@ bookUnread.type = "radio";
 bookUnread.name = "status";
 bookUnread.classList.add("statusRadio");
 bookUnread.id = "bookUnread";
+bookUnread.value = "Not Started";
 unreadLabel.appendChild(bookUnread);
 
 container.appendChild(readLabel);
